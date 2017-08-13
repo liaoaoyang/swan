@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class SwanKeyOpenidMapModel extends Model
+class SwanKeyOpenidMapModel implements MultiDrivers
 {
-    //
-    protected $table = 'swan_key_openid_map';
+    public static function createModel()
+    {
+        $dbConnection = env('DB_CONNECTION', 'mysql');
 
-    public $timestamps = [
-        'created_at',
-        'updated_at',
-    ];
+        if ('mysql' == $dbConnection) {
+            return new \App\Models\SwanKeyOpenidMapMySQLModel();
+        } else if ('mongodb' == $dbConnection) {
+            return new \App\Models\SwanKeyOpenidMapMongoModel();
+        }
+
+        return null;
+    }
 }

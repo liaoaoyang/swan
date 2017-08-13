@@ -33,6 +33,6 @@ class CreateSwanMessageTable extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('swan_message');
+        //Schema::dropIfExists('swan_message');
     }
 }

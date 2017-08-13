@@ -9,7 +9,8 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "league/commonmark": "^0.15.6",
-        "overtrue/wechat": "^3.3"
+        "overtrue/wechat": "^3.3",
+        "jenssegers/mongodb": "^3.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -49,5 +50,11 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
     }
 }

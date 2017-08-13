@@ -22,5 +22,6 @@ Route::any(Swan::OAUTH_BASE_CALLBACK_URL, 'WeChatController@swanOauthBaseScopeCa
 Route::any(Swan::API_SEND_URL, 'WeChatController@send');
 Route::any(Swan::MY_KEY_URL, 'WeChatController@myKey');
 Route::any(Swan::DETAIL_URL, 'WeChatController@detail');
-Route::any('/wechat/swan/userinfo', 'WeChatController@userinfo');
 Route::any('/wechat/swan/logout', 'WeChatController@logout');
+Route::any('/wechat/swan/userinfo', 'WeChatController@userinfo');
+

@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class SwanMessageModel extends Model
+class SwanMessageModel implements MultiDrivers
 {
     const STATUS_CREATE = 1;
 
-    //
-    protected $table = 'swan_message';
+    public static function createModel()
+    {
+        $dbConnection = env('DB_CONNECTION', 'mysql');
 
-    public $timestamps = [
-        'created_at',
-        'updated_at',
-    ];
+        if ('mysql' == $dbConnection) {
+            return new \App\Models\SwanMessageMySQLModel();
+        } else if ('mongodb' == $dbConnection) {
+            return new \App\Models\SwanMessageMongoModel();
+        }
+
+        return null;
+    }
 }

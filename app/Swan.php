@@ -32,7 +32,7 @@ class Swan
                 'scopes'   => array_map('trim', explode(',', env('WECHAT_OAUTH_SCOPES', 'snsapi_base'))),
                 'callback' => env('WECHAT_OAUTH_CALLBACK', Swan::OAUTH_BASE_CALLBACK_URL),
             ],
-            'log' => [
+            'log'    => [
                 'level' => env('EASY_WECHAT_LOG_LEVEL', 'error'),
                 'file'  => env('EASY_WECHAT_LOG_PATH', '/tmp/easywechat.log'),
             ],
@@ -50,8 +50,7 @@ class Swan
 
     public static function reloadDotEnv($path = null)
     {
-        if (null === $path)
-        {
+        if (null === $path) {
             $path = base_path();
         }
 
@@ -75,5 +74,18 @@ class Swan
         }
 
         return $pushKey;
+    }
+
+    public static function getDatabaseIDColumnName()
+    {
+        $dbConnection = env('DB_CONNECTION', 'mysql');
+
+        if ('mysql' == $dbConnection) {
+            return 'id';
+        } else if ('mongodb' == $dbConnection) {
+            return '_id';
+        }
+
+        return 'id';
     }
 }

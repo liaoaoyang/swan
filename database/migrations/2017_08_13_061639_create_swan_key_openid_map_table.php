@@ -30,6 +30,6 @@ class CreateSwanKeyOpenidMapTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('swan_key_openid_map');
+        //Schema::dropIfExists('swan_key_openid_map');
     }
 }

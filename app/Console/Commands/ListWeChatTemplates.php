@@ -58,8 +58,7 @@ class ListWeChatTemplates extends Command
         $this->line('There are ' . (!isset($templates['template_list']) ? 0 : count($templates['template_list'])) .
             ' templates');
 
-        foreach ($templates['template_list'] as $id => $template)
-        {
+        foreach ($templates['template_list'] as $id => $template) {
             $id += 1;
             /*
              * {

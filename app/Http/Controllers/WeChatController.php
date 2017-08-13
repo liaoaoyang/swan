@@ -43,11 +43,11 @@ class WeChatController extends BaseController
             return $this->weChatApp->oauth->redirect();
         }
 
-        $swanKeyOpenidMapModel = new SwanKeyOpenidMapModel();
+        $swanKeyOpenidMapModel = SwanKeyOpenidMapModel::createModel();
         $swanKeyOpenidMap = $swanKeyOpenidMapModel->where(['openid' => $swanUser['id']])->first();
 
         if (!$swanKeyOpenidMap) {
-            $swanKeyOpenidMap = new SwanKeyOpenidMapModel();
+            $swanKeyOpenidMap = SwanKeyOpenidMapModel::createModel();
             $swanKeyOpenidMap->key = Swan::generatePushKey();
             $swanKeyOpenidMap->openid = $swanUser['id'];
 
@@ -72,14 +72,14 @@ class WeChatController extends BaseController
 
         if (!$weChatUserInfo->subscribe) {
             return view('swan/subscribe_first', [
-                'subscribe_url' => env('WECHAT_SUBSCRIBE_URL'),
+                'subscribe_url'        => env('WECHAT_SUBSCRIBE_URL'),
                 'subscribe_qrcode_url' => env('WECHAT_SUBSCRIBE_QRCODE_URL')
             ]);
         }
 
         session([
             Swan::SESSION_KEY_OAUTH_TARGET_URL => '',
-            Swan::SESSION_KEY_PUSH_KEY => $swanKeyOpenidMap->key,
+            Swan::SESSION_KEY_PUSH_KEY         => $swanKeyOpenidMap->key,
         ]);
 
         return view('swan/mykey', [
@@ -115,7 +115,7 @@ class WeChatController extends BaseController
         $requestData['key'] = $key;
 
         $validator = Validator::make($requestData, [
-            'key' => 'required|between:1,255',
+            'key'  => 'required|between:1,255',
             'text' => 'required|between:1,255',
             'desp' => 'between:1,64000',
         ]);
@@ -126,7 +126,7 @@ class WeChatController extends BaseController
             ])->setStatusCode(403);
         }
 
-        $swanKeyOpenidMapModel = new SwanKeyOpenidMapModel();
+        $swanKeyOpenidMapModel = SwanKeyOpenidMapModel::createModel();
         $swanKeyOpenidMap = $swanKeyOpenidMapModel->where(['key' => $requestData['key']])->first();
 
         if (!$swanKeyOpenidMap) {
@@ -143,7 +143,7 @@ class WeChatController extends BaseController
             ])->setStatusCode(500);
         }
 
-        $sendText =  $requestData['text'];
+        $sendText = $requestData['text'];
 
         if (isset($requestData['desp']) && $requestData['desp']) {
             $sendText .= "\n内容：" . mb_strimwidth($requestData['desp'],
@@ -156,7 +156,7 @@ class WeChatController extends BaseController
             'text' => $sendText,
         ];
 
-        $swanMessage = new SwanMessageModel();
+        $swanMessage = SwanMessageModel::createModel();
         $swanMessage->openid = $swanKeyOpenidMap->openid;
         $swanMessage->text = $requestData['text'];
         $swanMessage->desp = isset($requestData['desp']) && $requestData['desp'] ? $requestData['desp'] : '';
@@ -208,10 +208,10 @@ class WeChatController extends BaseController
             return $this->weChatApp->oauth->redirect();
         }
 
-        $swanMessageModel = new SwanMessageModel();
+        $swanMessageModel = SwanMessageModel::createModel();
         $swanMessage = $swanMessageModel->where([
-            'id' => $requestData['id'],
-            'openid' => $swanUser['id'],
+            Swan::getDatabaseIDColumnName() => $requestData['id'],
+            'openid'                        => $swanUser['id'],
         ])->first();
 
         if (!$swanMessage) {
@@ -234,6 +234,10 @@ class WeChatController extends BaseController
 
     public function userinfo()
     {
+        if ('production' == env('APP_ENV', 'production')) {
+            return response('N/A');
+        }
+
         $swanUser = session(Swan::SESSION_KEY_SWAN_USER);
 
         if (!$swanUser) {
