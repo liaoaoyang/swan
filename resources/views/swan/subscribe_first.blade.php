@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
 
     <link href="//res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css" rel="stylesheet" />
-    <title>我的推送Key</title>
+    <title>请先关注公众号</title>
 </head>
 <body>
 <div class="container" id="container">
