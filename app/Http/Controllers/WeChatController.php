@@ -143,17 +143,12 @@ class WeChatController extends BaseController
             ])->setStatusCode(500);
         }
 
-        $sendText = $requestData['text'];
+        $sendText = Swan::buildSendText($requestData);
 
-        if (isset($requestData['desp']) && $requestData['desp']) {
-            $sendText .= "\n内容：" . mb_strimwidth($requestData['desp'],
-                    0,
-                    env('SWAN_DESP_BRIEF_LENGTH', 50),
-                    '...');
-        }
+        $textFieldKey = env('SWAN_TEMPLATE_DATA_KEY', 'text');
 
         $data = [
-            'text' => $sendText,
+            $textFieldKey => $sendText,
         ];
 
         $swanMessage = SwanMessageModel::createModel();
@@ -220,6 +215,7 @@ class WeChatController extends BaseController
             ]);
         }
 
+        // XSS prevention
         $swanMessage['desp'] = preg_replace_callback("#(<script>.+?</script>)#", function ($mat) {
             return htmlentities($mat[1]);
         }, $swanMessage['desp']);
@@ -245,11 +241,16 @@ class WeChatController extends BaseController
         }
 
         $userinfo = $this->weChatApp->user->get($swanUser['id']);
-        var_dump($userinfo);
+
+        return view('swan/userinfo', [
+            'infos' => $userinfo,
+        ]);
     }
 
     public function logout()
     {
         session()->flush();
+
+        return view('swan/logout');
     }
 }

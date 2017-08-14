@@ -58,6 +58,13 @@ class Swan
         $dotEnv->load();
     }
 
+    /**
+     * Generate push key by openssl_random_pseudo_bytes()
+     *
+     * @param int $keyLength
+     * @param int $randomBytes
+     * @return bool|mixed|string
+     */
     public static function generatePushKey($keyLength = 20, $randomBytes = 10)
     {
         $pushKey = base64_encode(openssl_random_pseudo_bytes($randomBytes));
@@ -87,5 +94,23 @@ class Swan
         }
 
         return 'id';
+    }
+
+    public static function buildSendText($requestData)
+    {
+        if (!isset($requestData['text']) || !$requestData['text']) {
+            return '';
+        }
+
+        $sendText = $requestData['text'];
+
+        if (isset($requestData['desp']) && $requestData['desp']) {
+            $sendText .= "\n内容：" . mb_strimwidth($requestData['desp'],
+                    0,
+                    env('SWAN_DESP_BRIEF_LENGTH', 50),
+                    '...');
+        }
+
+        return $sendText;
     }
 }

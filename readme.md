@@ -1,12 +1,12 @@
 # SWAN - Simple WeChat Alert Notifier
 
-Based on Laravel and EasyWeChat.
+Based on [Laravel](https://laravel.com/) and [EasyWeChat](https://easywechat.org/).
 
 ## Requirements
 
 + Nginx
 + PHP 5.6+
-+ MySQL
++ MySQL 5.6+/MongoDB 3+
 
 ## Nginx
 
@@ -51,5 +51,16 @@ server {
     error_log  /data/wwwlog/swan.sample.com/error.log error;
 }
 
+```
+
+## Project configuration
+
+### Database
+
+If you want to use MongoDB, you may config your .env with:
+
+```
+MONGO_DB_DSN=mongodb://username:password@host:port/database
+MONGO_DB_DATABASE=swan
 ```
 
