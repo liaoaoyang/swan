@@ -152,7 +152,7 @@ class Swan
      */
     public static function autoResponseNewFollow($weChatApp, $message)
     {
-        return urldecode(env('SWAN_WECHAT_NEW_FOLLOW_RESPONSE_TEXT_URLENCODE', urlencode('欢迎关注我')));
+        return urldecode(env('SWAN_WECHAT_NEW_FOLLOW_SUBSCRIBE_TEXT_URLENCODE', urlencode('欢迎关注我')));
     }
 
     /**
