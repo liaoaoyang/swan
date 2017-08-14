@@ -12,6 +12,7 @@ SWAN also provides message detail page and keep details for some days.
 
 ```diff
 - SWAN is still under develop and be careful when use it in production environments.
+```
 
 ## Requirements
 
