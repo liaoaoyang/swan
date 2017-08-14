@@ -2,6 +2,18 @@
 
 Based on [Laravel](https://laravel.com/) and [EasyWeChat](https://easywechat.org/).
 
+User visit `http://swan.your-site.com/wechat/swan/mykey` to get `KEY` first, and you can send messages via API (via HTTP POST/GET)
+
+```
+http://swan.your-site.com/wechat/swan/KEY.send?text=YouText
+```
+
+SWAN also provides message detail page and keep details for some days.
+
+<span style="color:red">
+**SWAN is still under develop and be carefully when use it in production environments.**
+</span>
+
 ## Requirements
 
 + Nginx
@@ -86,3 +98,15 @@ Default configurations is:
 SWAN_KEEP_MESSAGES_BEFORE_DAYS=30
 SWAN_DELETE_MESSAGES_LIMIT_PER_TIME=100
 ```
+
+## TODO
+
++ Dashboard
++ Async message dispatch
++ Message rate control
++ Automatic deployment
++ Security
++ Monitor
++ WeChat templates adaptation
++ Documents
+
