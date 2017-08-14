@@ -100,22 +100,29 @@ class Swan
         return 'id';
     }
 
-    public static function buildSendText($requestData)
+    public static function buildSendData($requestData)
     {
-        if (!isset($requestData['text']) || !$requestData['text']) {
-            return '';
-        }
+        $sendData = [];
 
-        $sendText = $requestData['text'];
+        $textFieldKey = env('SWAN_TEMPLATE_TEXT_KEY', 'keyword1');
+        $sendData[$textFieldKey] = isset($requestData['text']) ? $requestData['text'] : '无';
+        $despFieldKey = env('SWAN_TEMPLATE_DESP_KEY', 'remark');
+        $sendData[$despFieldKey] = '';
 
         if (isset($requestData['desp']) && $requestData['desp']) {
-            $sendText .= "\n内容：" . mb_strimwidth($requestData['desp'],
-                    0,
-                    env('SWAN_DESP_BRIEF_LENGTH', 50),
-                    '...');
+            $sendData[$despFieldKey] = mb_strimwidth($requestData['desp'],
+                0,
+                env('SWAN_DESP_BRIEF_LENGTH', 50),
+                '...');
         }
 
-        return $sendText;
+        $autoFillTimeKeys = explode(',', env('SWAN_TEMPLATE_AUTO_FILL_TIME_KEYS', ''));
+
+        foreach ($autoFillTimeKeys as $autoFillTimeKey) {
+            $sendData[$autoFillTimeKey] = date('Y-m-d H:i:s');
+        }
+
+        return $sendData;
     }
 
     public static function convertToDatabaseDatetimeString($dateTimeString)

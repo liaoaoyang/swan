@@ -143,13 +143,7 @@ class WeChatController extends BaseController
             ])->setStatusCode(500);
         }
 
-        $sendText = Swan::buildSendText($requestData);
-
-        $textFieldKey = env('SWAN_TEMPLATE_DATA_KEY', 'text');
-
-        $data = [
-            $textFieldKey => $sendText,
-        ];
+        $data = Swan::buildSendData($requestData);
 
         $swanMessage = SwanMessageModel::createModel();
         $swanMessage->openid = $swanKeyOpenidMap->openid;
