@@ -19,7 +19,7 @@
                 <div class="weui-form-preview__hd">
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">KEY</label>
-                        <em class="weui-form-preview__value" style="font-size: 1.4em;">{{ $key }}</em>
+                        <em class="weui-form-preview__value" style="font-size: 1.2em;">{{ $key }}</em>
                     </div>
                 </div>
                 <div class="weui-form-preview__bd">

@@ -25,11 +25,22 @@ class WeChatController extends BaseController
     function __construct()
     {
         $this->weChatApp = new WeChatApplication(Swan::loadEasyWeChatConfig());
+        $weChatApp = $this->weChatApp;
+        $weChatApp->server->setMessageHandler(function ($message) use ($weChatApp) {
+            switch ($message->MsgType) {
+                case 'text':
+                    return Swan::autoResponseKeywords($weChatApp, $message);
+
+                default:
+                    return Swan::autoResponseNewFollow($weChatApp, $message);
+            }
+        });
     }
 
     public function serve()
     {
-        return $this->weChatApp->server->serve();
+        $response = $this->weChatApp->server->serve();
+        $response->send();
     }
 
     public function myKey()
@@ -43,34 +54,21 @@ class WeChatController extends BaseController
             return $this->weChatApp->oauth->redirect();
         }
 
-        $swanKeyOpenidMapModel = SwanKeyOpenidMapModel::createModel();
-        $swanKeyOpenidMap = $swanKeyOpenidMapModel->where(['openid' => $swanUser['id']])->first();
+        $swanKeyOpenidMap = SwanKeyOpenidMapModel::getKey($this->weChatApp, $swanUser['id']);
 
-        if (!$swanKeyOpenidMap) {
-            $swanKeyOpenidMap = SwanKeyOpenidMapModel::createModel();
-            $swanKeyOpenidMap->key = Swan::generatePushKey();
-            $swanKeyOpenidMap->openid = $swanUser['id'];
-
-            if (!$swanKeyOpenidMap->save()) {
-                return view('swan/mykey', [
-                    'key'        => '未能获取推送key，请重试',
-                    'updated_at' => 'N/A',
-                    'retry_url'  => request()->fullUrl(),
-                ]);
-            }
-        }
-
-        $weChatUserInfo = $this->weChatApp->user->get($swanUser['id']);
-
-        if (!$weChatUserInfo) {
+        if ($swanKeyOpenidMap === SwanKeyOpenidMapModel::RESPONSE_GET_KEY_FAILED_TO_SAVE) {
+            return view('swan/mykey', [
+                'key'        => '未能获取推送key，请重试',
+                'updated_at' => 'N/A',
+                'retry_url'  => request()->fullUrl(),
+            ]);
+        } else if ($swanKeyOpenidMap === SwanKeyOpenidMapModel::RESPONSE_GET_KEY_NO_USER_INFO) {
             return view('swan/mykey', [
                 'key'        => '未能获取用户信息，请重试',
                 'updated_at' => 'N/A',
                 'retry_url'  => request()->fullUrl(),
             ]);
-        }
-
-        if (!$weChatUserInfo->subscribe) {
+        } else if ($swanKeyOpenidMap === SwanKeyOpenidMapModel::RESPONSE_GET_KEY_NOT_SUBSCRIBE) {
             return view('swan/subscribe_first', [
                 'subscribe_url'        => env('WECHAT_SUBSCRIBE_URL'),
                 'subscribe_qrcode_url' => env('WECHAT_SUBSCRIBE_QRCODE_URL')

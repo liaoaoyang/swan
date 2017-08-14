@@ -9,6 +9,8 @@
 
 namespace App;
 
+use App\Models\SwanKeyOpenidMapModel;
+
 class Swan
 {
     const TABLE_SWAN_KEY_OPENID_MAP = 'swan_key_openid_map';
@@ -134,5 +136,53 @@ class Swan
         }
 
         return $dateTimeString;
+    }
+
+    /**
+     * 请求消息基本属性
+     *
+     * $message->ToUserName    接收方帐号（该公众号 ID）
+     * $message->FromUserName  发送方帐号（OpenID, 代表用户的唯一标识）
+     * $message->CreateTime    消息创建时间（时间戳）
+     * $message->MsgId         消息 ID（64位整型）
+     *
+     * @param \EasyWeChat\Foundation\Application $weChatApp
+     * @param $message
+     * @return string
+     */
+    public static function autoResponseNewFollow($weChatApp, $message)
+    {
+        return urldecode(env('SWAN_WECHAT_NEW_FOLLOW_RESPONSE_TEXT_URLENCODE', urlencode('欢迎关注我')));
+    }
+
+    /**
+     * 文本
+     *
+     * $message->MsgType  text
+     * $message->Content  文本消息内容
+     *
+     * @param \EasyWeChat\Foundation\Application $weChatApp
+     * @param $message
+     * @return string
+     */
+    public static function autoResponseKeywords($weChatApp, $message)
+    {
+        if ($message->MsgType != 'text') {
+            return '';
+        }
+
+        $sendKeyUrlKeywords = explode(',', env('SWAN_WECHAT_AUTO_RESPONSE_KEYWORD_SEND_KEY','key'));
+
+        if (in_array($message->Content, $sendKeyUrlKeywords)) {
+            $keyObj = SwanKeyOpenidMapModel::getKey($weChatApp, $message->FromUserName);
+
+            if (gettype($keyObj) === 'string') {
+                return '';
+            }
+
+            return $keyObj->key;
+        }
+
+        return '';
     }
 }
