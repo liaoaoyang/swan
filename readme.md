@@ -8,7 +8,9 @@ Based on [Laravel](https://laravel.com/) and [EasyWeChat](https://easywechat.org
 + PHP 5.6+
 + MySQL 5.6+/MongoDB 3+
 
-## Nginx
+## Project configuration
+
+### Nginx
 
 ```
 server {
@@ -53,8 +55,6 @@ server {
 
 ```
 
-## Project configuration
-
 ### Database
 
 If you want to use MongoDB, you may config your .env with:
@@ -64,3 +64,25 @@ MONGO_DB_DSN=mongodb://username:password@host:port/database
 MONGO_DB_DATABASE=swan
 ```
 
+## Operations
+
+### Delete expired messages
+
+In order to keep database smaller, SWAN only keep messages created in 30 days.
+
+Use:
+
+```
+php artisan swan:clear-expired-messages
+```
+
+may help you to clear expired messages, they will deleted form database.
+
+Configurations `SWAN_KEEP_MESSAGES_BEFORE_DAYS` and `SWAN_DELETE_MESSAGES_LIMIT_PER_TIME` in `.env` described how many days will you keep message and how many messages will you delete per loop.
+
+Default configurations is:
+
+```
+SWAN_KEEP_MESSAGES_BEFORE_DAYS=30
+SWAN_DELETE_MESSAGES_LIMIT_PER_TIME=100
+```

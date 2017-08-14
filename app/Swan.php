@@ -117,4 +117,15 @@ class Swan
 
         return $sendText;
     }
+
+    public static function convertToDatabaseDatetimeString($dateTimeString)
+    {
+        $dbConnection = env('DB_CONNECTION', 'mysql');
+
+        if ('mongodb' == $dbConnection) {
+            return new \DateTime($dateTimeString);
+        }
+
+        return $dateTimeString;
+    }
 }
