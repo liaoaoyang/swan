@@ -11,13 +11,17 @@ namespace App;
 
 class Swan
 {
-    const SESSION_KEY_SWAN_USER = 'swan_user';
+    const TABLE_SWAN_KEY_OPENID_MAP = 'swan_key_openid_map';
+    const TABLE_SWAN_MESSAGE        = 'swan_message';
+
+    const SESSION_KEY_SWAN_USER        = 'swan_user';
     const SESSION_KEY_OAUTH_TARGET_URL = 'swan_oauth_target_url';
-    const SESSION_KEY_PUSH_KEY = 'swan_push_key';
+    const SESSION_KEY_PUSH_KEY         = 'swan_push_key';
+
     const OAUTH_BASE_CALLBACK_URL = '/wechat/swan/oauth/base/callback';
-    const MY_KEY_URL = '/wechat/swan/mykey';
-    const API_SEND_URL = '/wechat/swan/{key}.send';
-    const DETAIL_URL = '/wechat/swan/detail/{id}';
+    const MY_KEY_URL              = '/wechat/swan/mykey';
+    const API_SEND_URL            = '/wechat/swan/{key}.send';
+    const DETAIL_URL              = '/wechat/swan/detail/{id}';
 
     public static function loadEasyWeChatConfig()
     {

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Swan;
 use Illuminate\Database\Eloquent\Model;
 
 class SwanKeyOpenidMapMySQLModel extends Model
 {
     //
-    protected $table = 'swan_key_openid_map';
+    protected $table = Swan::TABLE_SWAN_KEY_OPENID_MAP;
 
     public $timestamps = [
         'created_at',

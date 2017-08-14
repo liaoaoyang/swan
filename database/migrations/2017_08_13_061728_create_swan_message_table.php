@@ -1,5 +1,6 @@
 <?php
 
+use App\Swan;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -13,7 +14,7 @@ class CreateSwanMessageTable extends Migration
      */
     public function up()
     {
-        Schema::create('swan_message', function (Blueprint $table) {
+        Schema::create(Swan::TABLE_SWAN_MESSAGE, function (Blueprint $table) {
             $table->unsignedInteger('id', true);
             $table->string('openid', 128)->index();
             $table->string('text', 255);

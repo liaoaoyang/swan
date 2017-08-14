@@ -1,5 +1,6 @@
 <?php
 
+use App\Swan;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -13,7 +14,7 @@ class CreateSwanKeyOpenidMapTable extends Migration
      */
     public function up()
     {
-        Schema::create('swan_key_openid_map', function (Blueprint $table) {
+        Schema::create(Swan::TABLE_SWAN_KEY_OPENID_MAP, function (Blueprint $table) {
             $table->unsignedInteger('id', true);
             $table->string('key', 128)->unique();
             $table->string('openid', 128)->unique();
