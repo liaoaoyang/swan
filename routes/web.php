@@ -24,4 +24,5 @@ Route::any(Swan::MY_KEY_URL, 'WeChatController@myKey');
 Route::any(Swan::DETAIL_URL, 'WeChatController@detail');
 Route::any('/wechat/swan/logout', 'WeChatController@logout');
 Route::any('/wechat/swan/userinfo', 'WeChatController@userinfo');
+Route::any('/wechat/swan/wxtauth', 'WeChatController@wxtauth');
 

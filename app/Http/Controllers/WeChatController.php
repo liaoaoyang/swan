@@ -8,9 +8,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Utils\MyWXTAuth;
 use Illuminate\Routing\Controller as BaseController;
 use EasyWeChat\Foundation\Application as WeChatApplication;
 use Validator;
+use Log;
 use App\Swan;
 use App\Models\SwanKeyOpenidMapModel;
 use App\Models\SwanMessageModel;
@@ -97,6 +99,16 @@ class WeChatController extends BaseController
         session([
             Swan::SESSION_KEY_SWAN_USER => $swanUser->toArray()
         ]);
+
+        if (MyWXTAuth::getBackUrl() && MyWXTAuth::getOnceEncryptSecret()) {
+            $swanUserArray = $swanUser->toArray();
+            $responseUrl = MyWXTAuth::generateResponseUrl([
+                'id' => $swanUserArray['id']
+            ]);
+            Log::info('From WX oauth callback, WXTAuth response url: ' . $responseUrl);
+
+            return redirect($responseUrl);
+        }
 
         $targetUrl = session(Swan::SESSION_KEY_OAUTH_TARGET_URL);
 
@@ -244,5 +256,27 @@ class WeChatController extends BaseController
         session()->flush();
 
         return view('swan/logout');
+    }
+
+    public function wxtauth()
+    {
+        if (MyWXTAuth::handleAuthRequest()) {
+            $swanUser = session(Swan::SESSION_KEY_SWAN_USER);
+
+            if (!$swanUser) {
+                return $this->weChatApp->oauth->redirect();
+            }
+
+            $swanUser = is_array($swanUser) ? $swanUser : json_decode($swanUser, true);
+
+            $responseUrl = MyWXTAuth::generateResponseUrl([
+                'id' => $swanUser['id']
+            ]);
+
+            Log::info('From WXTAuth Server session, WXTAuth response url: ' . $responseUrl);
+            return redirect($responseUrl);
+        }
+
+        return '发生异常，请重启浏览器';
     }
 }
