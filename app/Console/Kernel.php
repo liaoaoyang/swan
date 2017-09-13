@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
         //
         Commands\ListWeChatTemplates::class,
         Commands\ClearExpiredMessages::class,
+        Commands\ListWeChatUsers::class,
     ];
 
     /**
