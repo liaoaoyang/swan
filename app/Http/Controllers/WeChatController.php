@@ -277,6 +277,6 @@ class WeChatController extends BaseController
             return redirect($responseUrl);
         }
 
-        return '发生异常，请重启浏览器';
+        return view('swan/exception');
     }
 }
