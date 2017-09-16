@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Log;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -32,7 +33,11 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        parent::report($exception);
+        if (!config('app.debug')) {
+            Log::error('[' . $exception->getCode() . '] "' . $exception->getMessage() . '" on line ' . $exception->getTrace()[0]['line'] . ' of file ' . $exception->getTrace()[0]['file']);
+        } else {
+            parent::report($exception);
+        }
     }
 
     /**
@@ -44,6 +49,26 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof \EasyWeChat\Core\Exceptions\HttpException) {
+            if (strpos($exception->getMessage(), 'require subscribe hint') !== false) {
+                Log::error(__METHOD__ . '|EasyWeChat Exception: ' . $exception->getMessage());
+                return response()->view('swan/exception', [
+                    'exception' => [
+                        'desc' => '未关注公众号',
+                    ]
+                ]);
+            }
+        }
+
+        if (!config('app.debug')) {
+            Log::error(__METHOD__ . '|Exception: ' . $exception->getMessage());
+            return response()->view('swan/exception', [
+                'exception' => [
+                    'desc' => $exception->getMessage(),
+                ]
+            ]);
+        }
+
         return parent::render($request, $exception);
     }
 
