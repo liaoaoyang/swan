@@ -9,7 +9,10 @@
 
 namespace App;
 
-use App\Models\SwanKeyOpenidMapModel;
+use App\Utils\AutoResponses\KeywordSend as AutoResponseSend;
+use App\Utils\AutoResponses\KeywordStart as AutoResponseStart;
+use App\Utils\AutoResponses\KeywordStop as AutoResponseStop;
+use App\Utils\AutoResponses\KeywordSend as AutoResponseDefault;
 
 class Swan
 {
@@ -24,6 +27,8 @@ class Swan
     const MY_KEY_URL              = '/wechat/swan/mykey';
     const API_SEND_URL            = '/wechat/swan/{key}.send';
     const DETAIL_URL              = '/wechat/swan/detail/{id}';
+
+    private static $autoResponses = [];
 
     public static function loadEasyWeChatConfig()
     {
@@ -45,6 +50,18 @@ class Swan
         ];
 
         return $options;
+    }
+
+    public static function buildAutoResponseChain($forced = false)
+    {
+        if ($forced || !self::$autoResponses) {
+            self::$autoResponses[] = new AutoResponseSend();
+            self::$autoResponses[] = new AutoResponseStart();
+            self::$autoResponses[] = new AutoResponseStop();
+            self::$autoResponses[] = new AutoResponseDefault();
+        }
+
+        return self::$autoResponses;
     }
 
     public static function getWeChatTemplateId()
@@ -171,18 +188,21 @@ class Swan
             return '';
         }
 
-        $sendKeyUrlKeywords = explode(',', env('SWAN_WECHAT_AUTO_RESPONSE_KEYWORD_SEND_KEY','key'));
+        self::buildAutoResponseChain();
 
-        if (in_array($message->Content, $sendKeyUrlKeywords)) {
-            $keyObj = SwanKeyOpenidMapModel::getKey($weChatApp, $message->FromUserName);
+        $autoResponseText = '';
 
-            if (gettype($keyObj) === 'string') {
-                return '';
+        foreach (self::$autoResponses as $autoResponse) {
+            /**
+             * @var \App\Utils\AutoResponses\DefaultResponse $autoResponse
+             */
+            $autoResponseText = $autoResponse->getResponse($weChatApp, $message);
+
+            if ($autoResponseText !== false) {
+                break;
             }
-
-            return $keyObj->key;
         }
 
-        return '';
+        return $autoResponseText;
     }
 }
