@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Utils\MyWXTAuth;
+use EasyWeChat\Core\Exceptions\InvalidArgumentException;
 use Illuminate\Routing\Controller as BaseController;
 use EasyWeChat\Foundation\Application as WeChatApplication;
 use Validator;
@@ -28,15 +29,20 @@ class WeChatController extends BaseController
     {
         $this->weChatApp = new WeChatApplication(Swan::loadEasyWeChatConfig());
         $weChatApp = $this->weChatApp;
-        $weChatApp->server->setMessageHandler(function ($message) use ($weChatApp) {
-            switch ($message->MsgType) {
-                case 'text':
-                    return Swan::autoResponseKeywords($weChatApp, $message);
 
-                default:
-                    return Swan::autoResponseNewFollow($weChatApp, $message);
-            }
-        });
+        try {
+            $weChatApp->server->setMessageHandler(function ($message) use ($weChatApp) {
+                switch ($message->MsgType) {
+                    case 'text':
+                        return Swan::autoResponseKeywords($weChatApp, $message);
+
+                    default:
+                        return Swan::autoResponseNewFollow($weChatApp, $message);
+                }
+            });
+        } catch (InvalidArgumentException $e) {
+            Log::error($e->getMessage());
+        }
     }
 
     public function serve()
@@ -51,7 +57,7 @@ class WeChatController extends BaseController
 
         if (!$swanUser) {
             session([
-                Swan::SESSION_KEY_OAUTH_TARGET_URL => Swan::MY_KEY_URL
+                Swan::SESSION_KEY_OAUTH_TARGET_URL => Swan::MY_KEY_URL,
             ]);
             return $this->weChatApp->oauth->redirect();
         }
@@ -73,7 +79,7 @@ class WeChatController extends BaseController
         } else if ($swanKeyOpenidMap === SwanKeyOpenidMapModel::RESPONSE_GET_KEY_NOT_SUBSCRIBE) {
             return view('swan/subscribe_first', [
                 'subscribe_url'        => env('WECHAT_SUBSCRIBE_URL'),
-                'subscribe_qrcode_url' => env('WECHAT_SUBSCRIBE_QRCODE_URL')
+                'subscribe_qrcode_url' => env('WECHAT_SUBSCRIBE_QRCODE_URL'),
             ]);
         }
 
@@ -97,13 +103,13 @@ class WeChatController extends BaseController
         }
 
         session([
-            Swan::SESSION_KEY_SWAN_USER => $swanUser->toArray()
+            Swan::SESSION_KEY_SWAN_USER => $swanUser->toArray(),
         ]);
 
         if (MyWXTAuth::getBackUrl() && MyWXTAuth::getOnceEncryptSecret()) {
             $swanUserArray = $swanUser->toArray();
             $responseUrl = MyWXTAuth::generateResponseUrl([
-                'id' => $swanUserArray['id']
+                'id' => $swanUserArray['id'],
             ]);
             Log::info('From WX oauth callback, WXTAuth response url: ' . $responseUrl);
 
@@ -132,7 +138,7 @@ class WeChatController extends BaseController
 
         if ($validator->fails()) {
             return response()->json([
-                'error' => 'Failed to pass validator'
+                'error' => 'Failed to pass validator',
             ])->setStatusCode(403);
         }
 
@@ -141,15 +147,21 @@ class WeChatController extends BaseController
 
         if (!$swanKeyOpenidMap) {
             return response()->json([
-                'error' => 'No such user exists'
+                'error' => 'No such user exists',
             ])->setStatusCode(404);
+        }
+
+        if ($swanKeyOpenidMap->status != SwanKeyOpenidMapModel::STATUS_ENABLED) {
+            return response()->json([
+                'error' => 'User disabled push',
+            ])->setStatusCode(403);
         }
 
         $templateId = Swan::getWeChatTemplateId();
 
         if (!$templateId) {
             return response()->json([
-                'error' => 'No template available'
+                'error' => 'No template available',
             ])->setStatusCode(500);
         }
 
@@ -162,24 +174,24 @@ class WeChatController extends BaseController
 
         if (!$swanMessage->save()) {
             return response()->json([
-                'error' => 'Failed to save message'
+                'error' => 'Failed to save message',
             ])->setStatusCode(500);
         }
 
         $messageId = $swanMessage->id;
 
         if (!$this->weChatApp->notice->to($swanKeyOpenidMap->openid)
-            ->uses($templateId)
-            ->withUrl(request()->root() . "/wechat/swan/detail/{$messageId}")
-            ->withData($data)
-            ->send()) {
+                                     ->uses($templateId)
+                                     ->withUrl(request()->root() . "/wechat/swan/detail/{$messageId}")
+                                     ->withData($data)
+                                     ->send()) {
             return response()->json([
-                'error' => 'Failed to request WeChat API'
+                'error' => 'Failed to request WeChat API',
             ])->setStatusCode(500);
         }
 
         return response()->json([
-            'msg' => 'SUCCESS'
+            'msg' => 'SUCCESS',
         ]);
     }
 
@@ -202,7 +214,7 @@ class WeChatController extends BaseController
 
         if (!$swanUser) {
             session([
-                Swan::SESSION_KEY_OAUTH_TARGET_URL => request()->fullUrl()
+                Swan::SESSION_KEY_OAUTH_TARGET_URL => request()->fullUrl(),
             ]);
             return $this->weChatApp->oauth->redirect();
         }
@@ -270,7 +282,7 @@ class WeChatController extends BaseController
             $swanUser = is_array($swanUser) ? $swanUser : json_decode($swanUser, true);
 
             $responseUrl = MyWXTAuth::generateResponseUrl([
-                'id' => $swanUser['id']
+                'id' => $swanUser['id'],
             ]);
 
             Log::info('From WXTAuth Server session, WXTAuth response url: ' . $responseUrl);

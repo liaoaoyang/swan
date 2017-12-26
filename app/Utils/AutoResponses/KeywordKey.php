@@ -10,7 +10,7 @@ namespace App\Utils\AutoResponses;
 
 use App\Models\SwanKeyOpenidMapModel;
 
-class KeywordSend extends DefaultResponse
+class KeywordKey extends DefaultResponse
 {
     public function getResponse($weChatApp, $message)
     {

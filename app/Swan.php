@@ -9,10 +9,10 @@
 
 namespace App;
 
-use App\Utils\AutoResponses\KeywordSend as AutoResponseSend;
+use App\Utils\AutoResponses\KeywordKey as AutoResponseKey;
 use App\Utils\AutoResponses\KeywordStart as AutoResponseStart;
 use App\Utils\AutoResponses\KeywordStop as AutoResponseStop;
-use App\Utils\AutoResponses\KeywordSend as AutoResponseDefault;
+use App\Utils\AutoResponses\KeywordKey as AutoResponseDefault;
 
 class Swan
 {
@@ -55,7 +55,7 @@ class Swan
     public static function buildAutoResponseChain($forced = false)
     {
         if ($forced || !self::$autoResponses) {
-            self::$autoResponses[] = new AutoResponseSend();
+            self::$autoResponses[] = new AutoResponseKey();
             self::$autoResponses[] = new AutoResponseStart();
             self::$autoResponses[] = new AutoResponseStop();
             self::$autoResponses[] = new AutoResponseDefault();

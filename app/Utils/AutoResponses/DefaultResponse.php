@@ -10,6 +10,11 @@ namespace App\Utils\AutoResponses;
 
 class DefaultResponse
 {
+    /**
+     * @param $weChatApp
+     * @param $message
+     * @return string
+     */
     public function getResponse($weChatApp, $message)
     {
         return '';
