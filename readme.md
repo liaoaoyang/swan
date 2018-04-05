@@ -30,10 +30,14 @@ You may detect which database you are using and install the right requirements, 
 composer detect-composer-json
 ```
 
-before
+first.
+
+Example:
 
 ```
-composer install
+composer detect-composer-json
+composer run-script post-root-package-install
+composer update
 ```
 
 ### Nginx

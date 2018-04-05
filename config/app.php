@@ -1,6 +1,6 @@
 <?php
 
-return [
+$appConfigArray = [
 
     /*
     |--------------------------------------------------------------------------
@@ -177,8 +177,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
-        Jenssegers\Mongodb\MongodbServiceProvider::class,
     ],
 
     /*
@@ -228,7 +226,17 @@ return [
         'Validator'    => Illuminate\Support\Facades\Validator::class,
         'View'         => Illuminate\Support\Facades\View::class,
 
-        'Moloquent' => Jenssegers\Mongodb\Eloquent\Model::class,
+        //'Moloquent'    => Jenssegers\Mongodb\Eloquent\Model::class,
     ],
 
 ];
+
+if (class_exists('Jenssegers\Mongodb\MongodbServiceProvider')) {
+    $appConfigArray['providers'][] = Jenssegers\Mongodb\MongodbServiceProvider::class;
+}
+
+if (class_exists('Jenssegers\Mongodb\Eloquent\Model')) {
+    $appConfigArray['aliases']['Moloquent'] = Jenssegers\Mongodb\Eloquent\Model::class;
+}
+
+return $appConfigArray;
