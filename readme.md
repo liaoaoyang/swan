@@ -22,6 +22,20 @@ SWAN also provides message detail page and keep details for some days.
 
 ## Project configuration
 
+### Requirements
+
+You may detect which database you are using and install the right requirements, so you should run:
+
+```
+composer detect-composer-json
+```
+
+before
+
+```
+composer install
+```
+
 ### Nginx
 
 ```
