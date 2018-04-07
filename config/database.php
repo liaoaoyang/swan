@@ -82,6 +82,10 @@ return [
             'driver'   => 'mongodb',
             'dsn'      => env('MONGO_DB_DSN'),
             'database' => env('MONGO_DB_DATABASE'),
+            'options'  => [
+                'replicaSet' => env('MONGO_DB_REPLICA_SET', ''),
+                'database'   => env('MONGO_DB_AUTH_DATABASE', 'admin'), // sets the authentication database required by mongo 3
+            ]
         ],
 
     ],
