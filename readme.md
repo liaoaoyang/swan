@@ -94,6 +94,15 @@ MONGO_DB_DSN=mongodb://username:password@host:port/database
 MONGO_DB_DATABASE=swan
 ```
 
+You can also set replica set and auth database like:
+
+```
+MONGO_DB_DSN=mongodb://username:password@host:port,username1:password1@host1:port1
+MONGO_DB_DATABASE=swan
+MONGO_DB_REPLICA_SET=xxset
+MONGO_DB_AUTH_DATABASE=admin
+```
+
 ## Operations
 
 ### Delete expired messages
@@ -116,6 +125,14 @@ Default configurations is:
 SWAN_KEEP_MESSAGES_BEFORE_DAYS=30
 SWAN_DELETE_MESSAGES_LIMIT_PER_TIME=100
 ```
+
+### List WeChat users
+
+```
+php artisan swan:list-wechat-users
+```
+
+Will display users `key`/`WeChat Openid`/`Nickname`, you can add `page number` to view more users.
 
 ## TODO
 
