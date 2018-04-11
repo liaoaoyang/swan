@@ -134,6 +134,18 @@ php artisan swan:list-wechat-users
 
 Will display users `key`/`WeChat Openid`/`Nickname`, you can add `page number` to view more users.
 
+## Docker
+
+### Initialization
+
+```
+git clone https://github.com/liaoaoyang/swan
+cd swan
+docker run --rm -v `pwd`:/app composer detect-composer-json
+docker run --rm -v `pwd`:/app composer run-script post-root-package-install
+docker run --rm -v `pwd`:/app composer update
+```
+
 ## TODO
 
 + Dashboard
