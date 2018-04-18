@@ -20,6 +20,7 @@ Route::get('/', function () {
 Route::any('/wechat', 'WeChatController@serve');
 Route::any(Swan::OAUTH_BASE_CALLBACK_URL, 'WeChatController@swanOauthBaseScopeCallback');
 Route::any(Swan::API_SEND_URL, 'WeChatController@send');
+Route::any(Swan::API_ASYNC_SEND_URL, 'WeChatController@asyncSend');
 Route::any(Swan::MY_KEY_URL, 'WeChatController@myKey');
 Route::any(Swan::DETAIL_URL, 'WeChatController@detail');
 Route::any('/wechat/swan/logout', 'WeChatController@logout');

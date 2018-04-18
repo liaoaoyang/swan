@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendAlertEvent;
 use App\Utils\MyWXTAuth;
 use EasyWeChat\Core\Exceptions\InvalidArgumentException;
 use Illuminate\Routing\Controller as BaseController;
@@ -125,7 +126,7 @@ class WeChatController extends BaseController
         return redirect($targetUrl);
     }
 
-    public function send($key)
+    public function send($key, $async = false)
     {
         $requestData = request()->all();
         $requestData['key'] = $key;
@@ -180,19 +181,32 @@ class WeChatController extends BaseController
 
         $messageId = $swanMessage->id;
 
-        if (!$this->weChatApp->notice->to($swanKeyOpenidMap->openid)
-                                     ->uses($templateId)
-                                     ->withUrl(request()->root() . "/wechat/swan/detail/{$messageId}")
-                                     ->withData($data)
-                                     ->send()) {
-            return response()->json([
-                'error' => 'Failed to request WeChat API',
-            ])->setStatusCode(500);
+        if ($async) {
+            if (!event(new SendAlertEvent($swanKeyOpenidMap->openid, $templateId, $messageId, $data))) {
+                return response()->json([
+                    'error' => 'Failed to queue the task',
+                ])->setStatusCode(500);
+            }
+        } else {
+            if (!$this->weChatApp->notice->to($swanKeyOpenidMap->openid)
+                                         ->uses($templateId)
+                                         ->withUrl(request()->root() . "/wechat/swan/detail/{$messageId}")
+                                         ->withData($data)
+                                         ->send()) {
+                return response()->json([
+                    'error' => 'Failed to request WeChat API',
+                ])->setStatusCode(500);
+            }
         }
 
         return response()->json([
             'msg' => 'SUCCESS',
         ]);
+    }
+
+    public function asyncSend($key)
+    {
+        return $this->send($key, true);
     }
 
     public function detail($id)

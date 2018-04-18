@@ -11,7 +11,8 @@
         "laravel/tinker": "~1.0",
         "league/commonmark": "^0.15.6",
         "overtrue/laravel-lang": "~3.0",
-        "overtrue/wechat": "^3.3"
+        "overtrue/wechat": "^3.3",
+        "predis/predis": "1.1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

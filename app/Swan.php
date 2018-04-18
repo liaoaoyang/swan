@@ -26,6 +26,7 @@ class Swan
     const OAUTH_BASE_CALLBACK_URL = '/wechat/swan/oauth/base/callback';
     const MY_KEY_URL              = '/wechat/swan/mykey';
     const API_SEND_URL            = '/wechat/swan/{key}.send';
+    const API_ASYNC_SEND_URL      = '/wechat/swan/{key}.async.send';
     const DETAIL_URL              = '/wechat/swan/detail/{id}';
 
     private static $autoResponses = [];
