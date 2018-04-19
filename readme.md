@@ -134,6 +134,16 @@ php artisan swan:list-wechat-users
 
 Will display users `key`/`WeChat Openid`/`Nickname`, you can add `page number` to view more users.
 
+### Async message dispatch
+
+Sometimes you want to dispatch asynchronous message, you need to keep
+
+```
+php artisan queue:work redis --queue=send_alert
+```
+
+running in the background and change your api from `key.send` to `key.async.send`.
+
 ## Docker
 
 ### Initialization
@@ -149,7 +159,7 @@ docker run --rm -v `pwd`:/app composer update
 ## TODO
 
 + Dashboard
-+ Async message dispatch
++ Async message dispatch √
 + Message rate control
 + Automatic deployment
 + Security
