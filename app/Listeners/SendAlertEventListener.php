@@ -14,8 +14,8 @@ class SendAlertEventListener implements ShouldQueue
 
     protected $weChatApp = null;
 
-    public $connection = 'redis';
-    public $queue      = 'send_alert';
+    public $connection;
+    public $queue;
 
     /**
      * Create the event listener.
@@ -24,7 +24,9 @@ class SendAlertEventListener implements ShouldQueue
      */
     public function __construct()
     {
-        $this->weChatApp = new WeChatApplication(Swan::loadEasyWeChatConfig());
+        $this->connection = env('SWAN_ASYNC_SEND_QUEUE', 'redis');
+        $this->queue      = env('SWAN_ASYNC_SEND_QUEUE_NAME', 'send_alert');
+        $this->weChatApp  = new WeChatApplication(Swan::loadEasyWeChatConfig());
     }
 
     /**

@@ -49,4 +49,4 @@ services:
             - "/var/www/html/artisan"
             - "queue:work"
             - "redis"
-            - "--queue=send_alert"
+            - "--queue=${SWAN_ASYNC_SEND_QUEUE}"

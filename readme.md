@@ -154,6 +154,8 @@ cd swan
 docker run --rm -v `pwd`:/app composer detect-composer-json
 docker run --rm -v `pwd`:/app composer run-script post-root-package-install
 docker run --rm -v `pwd`:/app composer update
+# Setup .env
+docker-compose -p swan -f `pwd`/docker/docker-compose.yml up -d
 ```
 
 ## TODO
