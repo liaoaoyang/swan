@@ -143,6 +143,10 @@ class WeChatController extends BaseController
             ])->setStatusCode(403);
         }
 
+        if (!$async && isset($requestData['async']) && $requestData['async']) {
+            $async = true;
+        }
+
         $swanKeyOpenidMapModel = SwanKeyOpenidMapModel::createModel();
         $swanKeyOpenidMap = $swanKeyOpenidMapModel->where(['key' => $requestData['key']])->first();
 

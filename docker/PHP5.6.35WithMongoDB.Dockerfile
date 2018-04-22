@@ -12,6 +12,6 @@ RUN curl -s 'https://api.ip.la/en' | grep -q China && \
     adduser -u ${SWAN_DOCKER_PHP_FPM_UID:-500} -D -S -G ${SWAN_DOCKER_PHP_FPM_USER:-www} ${SWAN_DOCKER_PHP_FPM_USER:-www} && \
     apk add --no-cache openssl-dev && \
     apk add --no-cache --virtual .build-deps g++ make autoconf && \
-	pecl install mongodb-1.4.2 && \
+	pecl install mongodb-1.2.9 && \
 	docker-php-ext-enable mongodb && \
 	apk del --purge .build-deps g++ make autoconf
