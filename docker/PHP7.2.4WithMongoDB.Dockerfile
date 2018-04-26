@@ -1,5 +1,5 @@
-# php:7.2.4-fpm-with-mongodb-alpine3.7
-# docker build -t php:7.2.4-fpm-with-mongodb-alpine3.7 -f ./PHP7.2.4WithMongoDB.Dockerfile .
+# swan:7.2.4-fpm-with-mongodb-alpine3.7
+# docker build -t swan:7.2.4-fpm-with-mongodb-alpine3.7 -f ./PHP7.2.4WithMongoDB.Dockerfile .
 FROM php:7.2.4-fpm-alpine3.7
 
 ARG SWAN_DOCKER_PHP_FPM_USER
