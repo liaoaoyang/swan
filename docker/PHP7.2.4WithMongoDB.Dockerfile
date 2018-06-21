@@ -14,4 +14,5 @@ RUN curl -s 'https://api.ip.la/en' | grep -q China && \
     apk add --no-cache --virtual .build-deps g++ make autoconf && \
 	pecl install mongodb-1.4.2 && \
 	docker-php-ext-enable mongodb && \
+	docker-php-ext-install pdo_mysql && \
 	apk del --purge .build-deps g++ make autoconf
