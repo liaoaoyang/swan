@@ -14,6 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        \URL::forceScheme(env('SWAN_ADMIN_HTTPS', false) ? 'https' : 'http');
     }
 
     /**

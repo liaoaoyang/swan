@@ -1,0 +1,60 @@
+version: '3'
+networks:
+    swan:
+services:
+    swan_mysql:
+        image: mysql:5.7.22
+        networks:
+            - swan
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            -  ${SWAN_DOCKER_MYSQL_DATA_DIR}:/var/lib/mysql
+    swan_phpfpm:
+        build:
+            context: ./
+            dockerfile: ${SWAN_DOCKER_PHP_FPM_FILENAME}
+            args:
+              - SWAN_DOCKER_PHP_FPM_USER=${SWAN_DOCKER_PHP_FPM_USER}
+              - SWAN_DOCKER_PHP_FPM_UID=${SWAN_DOCKER_PHP_FPM_UID}
+        image: ${SWAN_DOCKER_PHP_FPM_IMAGE_NAME}
+        user: ${SWAN_DOCKER_PHP_FPM_USER}
+        networks:
+            - swan
+        volumes:
+            - ./conf/php/php.ini:/usr/local/etc/php/php.ini:ro
+            - ../:/var/www/html
+            - ../storage/logs:/var/www/logs
+        expose:
+          - "9000"
+    swan_openresty:
+        image: openresty/openresty:alpine
+        networks:
+            - swan
+        depends_on:
+            - swan_phpfpm
+        links:
+            - swan_phpfpm
+        ports:
+            - "${SWAN_DOCKER_NGINX_PORT}:80"
+        volumes:
+            - ./conf/nginx/conf.d:/etc/nginx/conf.d/:ro
+            - ../:/var/www/html
+            - ../storage/logs:/usr/local/openresty/nginx/logs
+    swan_queue_work_send_alert:
+        image: ${SWAN_DOCKER_PHP_FPM_IMAGE_NAME}
+        user: ${SWAN_DOCKER_PHP_FPM_USER}
+        depends_on:
+            - swan_phpfpm
+        networks:
+            - swan
+        volumes:
+            - ./conf/php/php_cli.ini:/usr/local/etc/php/php.ini:ro
+            - ../:/var/www/html
+            - ../storage/logs:/var/www/logs
+        entrypoint:
+            - "/usr/local/bin/php"
+            - "/var/www/html/artisan"
+            - "queue:work"
+            - "redis"
+            - "--queue=${SWAN_ASYNC_SEND_QUEUE}"

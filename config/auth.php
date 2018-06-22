@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => (env('DB_CONNECTION', 'mysql') == 'mysql' ? App\User::class : App\Admin\Auth\Database\Mongodb\User::class),
         ],
 
         // 'users' => [

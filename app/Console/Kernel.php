@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         Commands\ClearExpiredMessages::class,
         Commands\ListWeChatUsers::class,
         Commands\Report::class,
+        Commands\LaravelAdminInstallCommand::class,
     ];
 
     /**

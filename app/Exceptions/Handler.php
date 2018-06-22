@@ -34,8 +34,12 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        $exceptionTrace = $exception->getTrace();
+        $line0 = isset($exceptionTrace[0]['line']) ? $exceptionTrace[0]['line'] : '';
+        $file0 = isset($exceptionTrace[0]['file']) ? $exceptionTrace[0]['file'] : '';
+
         if (!config('app.debug')) {
-            Log::error('[' . $exception->getCode() . '] "' . $exception->getMessage() . '" on line ' . $exception->getTrace()[0]['line'] . ' of file ' . $exception->getTrace()[0]['file']);
+            Log::error('[' . $exception->getCode() . '] "' . $exception->getMessage() . '" on line ' . $line0 . ' of file ' . $file0);
         } else {
             parent::report($exception);
         }
@@ -52,7 +56,7 @@ class Handler extends ExceptionHandler
     {
         $exceptionData = [
             'exception' => [
-                'desc' => '其他错误',
+                'desc' => '其他错误' . $exception->getTraceAsString(),
             ],
         ];
 

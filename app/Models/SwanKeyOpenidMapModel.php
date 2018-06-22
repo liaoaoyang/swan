@@ -14,6 +14,9 @@ class SwanKeyOpenidMapModel implements MultiDrivers
     const STATUS_DISABLED         = 1;
     const STATUS_DISABLED_BY_USER = 2;
 
+    /**
+     * @return SwanKeyOpenidMapMongoModel|SwanKeyOpenidMapMySQLModel|null
+     */
     public static function createModel()
     {
         $dbConnection = env('DB_CONNECTION', 'mysql');

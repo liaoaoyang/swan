@@ -231,6 +231,7 @@ $appConfigArray = [
 
 ];
 
+
 if (class_exists('Jenssegers\Mongodb\MongodbServiceProvider')) {
     $appConfigArray['providers'][] = Jenssegers\Mongodb\MongodbServiceProvider::class;
 }

@@ -30,7 +30,7 @@ return [
     ],
 
     'stripe' => [
-        'model' => App\User::class,
+        'model' => (env('DB_CONNECTION', 'mysql') == 'mysql' ? App\User::class : App\Admin\Auth\Database\Mongodb\User::class),
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
