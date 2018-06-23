@@ -17,7 +17,7 @@ Route::get('/', function () {
     //return 'SWAN - Simple WeChat Alert Notifier';
     return view('swan/subscribe_first', [
         'html_title'           => 'SWAN - Simple WeChat Alert Notifier',
-        'page_title'           => '关注公众号接收消息',
+        'page_title'           => '关注接收消息',
         'subscribe_url'        => env('WECHAT_SUBSCRIBE_URL'),
         'subscribe_qrcode_url' => env('WECHAT_SUBSCRIBE_QRCODE_URL'),
     ]);

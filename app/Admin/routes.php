@@ -14,6 +14,7 @@ Route::group([
     $router->get('/system', 'HomeController@index');
     $router->get('/swan/users', 'SwanUserController@index');
     $router->get('/swan/messages', 'SwanMessageController@index');
+    $router->post('/api/getWeChatUserInfo', 'SwanUserController@getWeChatUserInfo');
 
 });
 

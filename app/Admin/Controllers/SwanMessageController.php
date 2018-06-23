@@ -4,14 +4,18 @@ namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\SwanMessageModel;
+use App\Swan;
 use Encore\Admin\Controllers\ModelForm;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
+use EasyWeChat\Foundation\Application as WeChatApplication;
+use Cache;
 
 class SwanMessageController extends Controller
 {
     use ModelForm;
+    use SwanColumns;
 
     /**
      * Index interface.
@@ -48,12 +52,14 @@ class SwanMessageController extends Controller
      */
     protected function grid()
     {
+        $weChatApp = new WeChatApplication(Swan::loadEasyWeChatConfig());
         $class = get_class(SwanMessageModel::createModel());
 
-        return Admin::grid($class, function (Grid $grid) {
+        return Admin::grid($class, function (Grid $grid) use ($weChatApp) {
 
             $grid->id('ID')->sortable();
             $grid->column('openid');
+            $this->addColumnWeChatNickname($grid, $weChatApp);
             $grid->column('text', '标题');
             $grid->column('desp', '正文');
 

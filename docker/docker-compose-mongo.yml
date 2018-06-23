@@ -2,6 +2,14 @@ version: '3'
 networks:
     swan:
 services:
+    swan_redis:
+        image: redis:alpine
+        networks:
+            - swan
+        ports:
+            - "${SWAN_DOCKER_REDIS_PORT}:6379"
+        command:
+            - "--requirepass ${REDIS_PASSWORD}"
     swan_mysql:
         image: mysql:5.7.22
         networks:
@@ -21,6 +29,9 @@ services:
         user: ${SWAN_DOCKER_PHP_FPM_USER}
         networks:
             - swan
+        depends_on:
+            - swan_redis
+            - swan_mysql
         volumes:
             - ./conf/php/php.ini:/usr/local/etc/php/php.ini:ro
             - ../:/var/www/html

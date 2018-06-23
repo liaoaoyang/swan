@@ -16,17 +16,7 @@ class LaravelAdminInstallCommand extends \Encore\Admin\Console\InstallCommand
 {
     protected $description = 'Install the admin package (Create Admin DB if not exists)';
 
-    public function initDatabase()
-    {
-        $this->call('migrate');
-
-        if (Administrator::count() == 0) {
-            $this->call('db:seed', ['--class' => LaravelAdminTableSeeder::class]);
-            $this->call('admin:import', ['extension' => 'log-viewer']);
-        }
-    }
-
-    public function handle()
+    protected function createSWANAdminDatabase()
     {
         $connection = config('admin.database.connection') ?: config('database.default');
         $database = env('DB_DATABASE');
@@ -46,9 +36,29 @@ class LaravelAdminInstallCommand extends \Encore\Admin\Console\InstallCommand
 
             } catch (\PDOException $exception) {
                 $this->error(sprintf('Failed to create %s database, %s', $database, $exception->getMessage()));
+                return false;
             }
         }
 
-        parent::handle();
+        return true;
+    }
+
+
+
+    public function initDatabase()
+    {
+        if (!$this->createSWANAdminDatabase()) {
+            exit();
+        }
+
+        $this->call('migrate');
+
+        //$migrateFileName = dirname(app_path()) . '/database/migrations/2016_01_04_173148_create_admin_tables.php';
+
+        if (Administrator::count() == 0) {
+            $this->call('db:seed', ['--class' => LaravelAdminTableSeeder::class]);
+        }
+
+        $this->call('admin:import', ['extension' => 'log-viewer']);
     }
 }

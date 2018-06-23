@@ -20,7 +20,7 @@
             @else
                 <h1 class="page__title">请先关注公众号</h1>
             @endif
-            <p class="page__desc">长按识别下方二维码</p>
+            <p class="page__desc">长按识别下方二维码，关注后接收消息，向公众号发送 key 获取推送 key 后即可发送消息</p>
         </div>
         <div class="page__bd">
             <div class="weui-form-preview__ft">

@@ -93,3 +93,4 @@ $RECYCLE.BIN/
 .directory
 .Trash-*
 .nfs*
+*.ignore

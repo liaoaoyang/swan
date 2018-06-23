@@ -29,6 +29,8 @@ class Swan
     const API_ASYNC_SEND_URL      = '/wechat/swan/{key}.async.send';
     const DETAIL_URL              = '/wechat/swan/detail/{id}';
 
+    const CACHE_TAG_WECHAT_USERINFO = 'wechat_user_info';
+
     private static $autoResponses = [];
 
     public static function loadEasyWeChatConfig()

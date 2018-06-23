@@ -5,15 +5,18 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\SwanKeyOpenidMapModel;
 use App\Swan;
+use Carbon\Carbon;
 use Encore\Admin\Controllers\ModelForm;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use EasyWeChat\Foundation\Application as WeChatApplication;
+use Cache;
 
 class SwanUserController extends Controller
 {
     use ModelForm;
+    use SwanColumns;
 
     /**
      * Index interface.
@@ -62,22 +65,7 @@ class SwanUserController extends Controller
             $grid->id('ID')->sortable();
             $grid->column('openid');
             $grid->column('key');
-            $grid->column('wechat_nickanme','用户昵称')->display(function () use ($weChatApp) {
-                $openid = $this->openid;
-
-                try {
-                    $user = $weChatApp->user->get($openid);
-
-                    if (!isset($user->nickname)) {
-                        return '用户不存在';
-                    }
-                } catch (\Exception $e) {
-                    return '未知用户';
-                }
-
-                return $user->nickname;
-            });
-
+            $this->addColumnWeChatNickname($grid, $weChatApp);
             $grid->created_at();
             $grid->updated_at();
 
