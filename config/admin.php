@@ -113,7 +113,7 @@ return [
      */
     'operation_log' => [
 
-        'enable' => true,
+        'enable' => env('SWAN_ADMIN_ENABLE_OPERATION_LOG', true),
 
         /*
          * Routes that will not log to database.
