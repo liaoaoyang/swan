@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
     {
         $exceptionData = [
             'exception' => [
-                'desc' => '其他错误' . $exception->getTraceAsString(),
+                'desc' => '其他错误',
             ],
         ];
 
