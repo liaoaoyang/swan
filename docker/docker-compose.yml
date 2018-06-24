@@ -10,6 +10,14 @@ services:
             - "${SWAN_DOCKER_REDIS_PORT}:6379"
         command:
             - "--requirepass ${REDIS_PASSWORD}"
+    swan_mysql:
+        image: mysql:5.7.22
+        networks:
+            - swan
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            -  ${SWAN_DOCKER_MYSQL_DATA_DIR}:/var/lib/mysql
     swan_phpfpm:
         build:
             context: ./
