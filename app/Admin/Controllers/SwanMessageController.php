@@ -53,11 +53,12 @@ class SwanMessageController extends Controller
     protected function grid()
     {
         $weChatApp = new WeChatApplication(Swan::loadEasyWeChatConfig());
-        $class = get_class(SwanMessageModel::createModel());
+        $modelClass = SwanMessageModel::createModel();
+        $idName = Swan::getModelIdFieldName($modelClass);
+        $class = get_class($modelClass);
 
-        return Admin::grid($class, function (Grid $grid) use ($weChatApp) {
-
-            $grid->id('ID')->sortable();
+        return Admin::grid($class, function (Grid $grid) use ($weChatApp, $idName) {
+            $grid->column($idName, 'ID')->sortable();
             $grid->column('openid');
             $this->addColumnWeChatNickname($grid, $weChatApp);
             $grid->column('text', '标题');

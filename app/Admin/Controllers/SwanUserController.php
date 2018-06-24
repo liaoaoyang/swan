@@ -57,12 +57,13 @@ class SwanUserController extends Controller
      */
     protected function grid()
     {
-        $class = get_class(SwanKeyOpenidMapModel::createModel());
+        $modelClass = SwanKeyOpenidMapModel::createModel();
+        $idName = Swan::getModelIdFieldName($modelClass);
+        $class = get_class($modelClass);
         $weChatApp = new WeChatApplication(Swan::loadEasyWeChatConfig());
 
-        return Admin::grid($class, function (Grid $grid) use ($weChatApp) {
-
-            $grid->id('ID')->sortable();
+        return Admin::grid($class, function (Grid $grid) use ($weChatApp, $idName) {
+            $grid->column($idName, 'ID')->sortable();
             $grid->column('openid');
             $grid->column('key');
             $this->addColumnWeChatNickname($grid, $weChatApp);

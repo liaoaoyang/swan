@@ -208,4 +208,19 @@ class Swan
 
         return $autoResponseText;
     }
+
+    /**
+     * @param $class
+     * @return string
+     */
+    public static function getModelIdFieldName($class)
+    {
+        $modelIDName = 'id';
+
+        if (class_exists('\Jenssegers\Mongodb\Eloquent\Model') && ($class instanceof \Jenssegers\Mongodb\Eloquent\Model)) {
+            $modelIDName = '_id';
+        }
+
+        return $modelIDName;
+    }
 }
