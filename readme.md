@@ -158,9 +158,15 @@ docker run --rm -v `pwd`:/app composer update
 docker-compose -p swan -f `pwd`/docker/docker-compose.yml up -d
 ```
 
+## Dashboard
+
+Added [Laravel Admin](http://laravel-admin.org/) to provide a simple dashboard.
+
+Original username is `admin`, password is `SWAN_ADMIN_INIT_PASSWORD` in `.env`.
+
 ## TODO
 
-+ Dashboard
++ Dashboard √
 + Async message dispatch √
 + Message rate control
 + Automatic deployment
