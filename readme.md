@@ -164,12 +164,11 @@ Added [Laravel Admin](http://laravel-admin.org/) to provide a simple dashboard.
 
 Messages:
 
-![Messages](http://github.com/liaoaoyang/swan/raw/master/public/img/readme/messages.jpg)
+![Messages](https://raw.githubusercontent.com/liaoaoyang/swan/master/public/img/readme/messages.jpg)
 
 Users:
 
-![Users](http://github.com/liaoaoyang/swan/raw/master/public/img/readme/users.jpg)
-
+![Users](https://raw.githubusercontent.com/liaoaoyang/swan/master/public/img/readme/users.jpg)
 
 Original username is `admin`, password is `SWAN_ADMIN_INIT_PASSWORD` in `.env`.
 
