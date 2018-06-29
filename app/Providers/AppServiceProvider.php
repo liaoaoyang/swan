@@ -13,6 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        \Request::setTrustedProxies(explode(',', env('SWAN_TRUST_PROXIES', '192.168.0.0/16')));
         //
         \URL::forceScheme(env('SWAN_ADMIN_HTTPS', false) ? 'https' : 'http');
     }

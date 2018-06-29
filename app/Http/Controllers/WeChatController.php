@@ -176,6 +176,7 @@ class WeChatController extends BaseController
         $swanMessage->openid = $swanKeyOpenidMap->openid;
         $swanMessage->text = $requestData['text'];
         $swanMessage->desp = isset($requestData['desp']) && $requestData['desp'] ? $requestData['desp'] : '';
+        $swanMessage->request_ip = request()->getClientIp();
 
         if (!$swanMessage->save()) {
             return response()->json([

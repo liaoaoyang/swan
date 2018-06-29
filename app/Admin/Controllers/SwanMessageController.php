@@ -63,6 +63,7 @@ class SwanMessageController extends Controller
             $this->addColumnWeChatNickname($grid, $weChatApp);
             $grid->column('text', '标题');
             $grid->column('desp', '正文');
+            $grid->column('request_ip', '发送IP');
 
             $grid->created_at();
             $grid->updated_at();
