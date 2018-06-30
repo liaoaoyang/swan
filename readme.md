@@ -156,6 +156,8 @@ docker run --rm -v `pwd`:/app composer run-script post-root-package-install
 docker run --rm -v `pwd`:/app composer update
 # Setup .env
 docker-compose -p swan -f `pwd`/docker/docker-compose.yml up -d
+# Install dashboard
+docker run --rm -v `pwd`:/var/www/html --network=swan_swan swan:7.2.4-fpm-with-mongodb-alpine3.7 php artisan admin:install
 ```
 
 ## Dashboard
