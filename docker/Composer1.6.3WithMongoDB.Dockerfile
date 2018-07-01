@@ -1,5 +1,5 @@
 # composer:1.6.3-with-mongodb
-# docker build -t composer:1.6.3-with-mongodb -f ./Composer1.6.3WithMongoDB.Dockerfile .
+# docker build -t swan:composer1.6.3-with-mongodb -f ./Composer1.6.3WithMongoDB.Dockerfile .
 FROM composer:1.6.3
 RUN curl -s 'https://api.ip.la/en' | grep -q China && \
     sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && apk update; \

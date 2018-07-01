@@ -151,12 +151,13 @@ running in the background and change your api from `key.send` to `key.async.send
 ```
 git clone https://github.com/liaoaoyang/swan
 cd swan
-docker run --rm -v `pwd`:/app composer detect-composer-json
-docker run --rm -v `pwd`:/app composer run-script post-root-package-install
-docker run --rm -v `pwd`:/app composer update
+docker build -t swan:composer1.6.3-with-mongodb -f ./docker/Composer1.6.3WithMongoDB.Dockerfile .
+docker run --rm -v `pwd`:/app swan:composer1.6.3-with-mongodb run-script detect-composer-json
+docker run --rm -v `pwd`:/app swan:composer1.6.3-with-mongodb run-script post-root-package-install
+docker run --rm -v `pwd`:/app swan:composer1.6.3-with-mongodb update
 # Setup .env
 docker-compose -p swan -f `pwd`/docker/docker-compose.yml up -d
-# Install dashboard
+# Install dashboard, just run this once and do not run it until you change database
 docker run --rm -v `pwd`:/var/www/html --network=swan_swan swan:7.2.4-fpm-with-mongodb-alpine3.7 php artisan admin:install
 ```
 
