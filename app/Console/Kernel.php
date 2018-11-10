@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         Commands\ListWeChatUsers::class,
         Commands\Report::class,
         Commands\LaravelAdminInstallCommand::class,
+        Commands\SetupCustomMenu::class,
     ];
 
     /**

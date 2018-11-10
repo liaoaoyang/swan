@@ -37,6 +37,9 @@ class WeChatController extends BaseController
                     case 'text':
                         return Swan::autoResponseKeywords($weChatApp, $message);
 
+                    case 'event':
+                        return Swan::autoResponseEvent($weChatApp, $message);
+
                     default:
                         return Swan::autoResponseNewFollow($weChatApp, $message);
                 }

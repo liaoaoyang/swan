@@ -176,6 +176,46 @@ class Swan
     }
 
     /**
+     * 事件处理
+     * 请求消息基本属性
+     *
+     * $message->ToUserName    接收方帐号（该公众号 ID）
+     * $message->FromUserName  发送方帐号（OpenID, 代表用户的唯一标识）
+     * $message->CreateTime    消息创建时间（时间戳）
+     * $message->MsgId         消息 ID（64位整型）
+     *
+     * @param \EasyWeChat\Foundation\Application $weChatApp
+     * @param $message
+     * @return string
+     */
+    public static function autoResponseEvent($weChatApp, $message)
+    {
+        if ($message->MsgType != 'event') {
+            return '';
+        }
+
+        $resp = null;
+
+        switch ($message->Event) {
+            case 'CLICK':
+                $fakeMessage = $message;
+                $fakeMessage->MsgType = 'text';
+                $fakeMessage->Content = $message->EventKey;
+                $resp = Swan::autoResponseKeywords($weChatApp, $fakeMessage);
+                break;
+
+            default:
+                break;
+        }
+
+        if ($resp) {
+            return $resp;
+        }
+
+        return urldecode(env('SWAN_WECHAT_NEW_SUBSCRIBE_RESPONSE_TEXT_URLENCODE', urlencode('欢迎关注我')));
+    }
+
+    /**
      * 文本
      *
      * $message->MsgType  text
