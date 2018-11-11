@@ -144,6 +144,18 @@ php artisan queue:work redis --queue=send_alert
 
 running in the background and change your api from `key.send` to `key.async.send`.
 
+### Custom WeChat menu
+
+If you want to simplify WeChat custom menu you may use:
+
+```
+php artisan swan:setup-custom-menu
+```
+
+to make only key button in custom menu. It will only display a button with text `Key` by default. When user click it it will return the push KEY.
+
+Read more of custom menu in WeChat [wiki](https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141013).
+
 ## Docker
 
 ### Initialization
