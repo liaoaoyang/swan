@@ -296,16 +296,28 @@ class WeChatController extends BaseController
     {
         if (MyWXTAuth::handleAuthRequest()) {
             $swanUser = session(Swan::SESSION_KEY_SWAN_USER);
+            $scope = request('scope', 'snsapi_base');
 
             if (!$swanUser) {
-                return $this->weChatApp->oauth->redirect();
+                $oauthObj = $this->weChatApp->oauth;
+
+                if (in_array($scope, ['snsapi_base', 'snsapi_userinfo'])) {
+                    $oauthObj->scopes([$scope]);
+                }
+
+                return $oauthObj->redirect();
             }
 
             $swanUser = is_array($swanUser) ? $swanUser : json_decode($swanUser, true);
+            $responseData = [
+                'id'   => $swanUser['id'],
+            ];
 
-            $responseUrl = MyWXTAuth::generateResponseUrl([
-                'id' => $swanUser['id'],
-            ]);
+            if ($scope == 'snsapi_userinfo') {
+                $responseData['user'] = $swanUser;
+            }
+
+            $responseUrl = MyWXTAuth::generateResponseUrl($responseData);
 
             Log::info('From WXTAuth Server session, WXTAuth response url: ' . $responseUrl);
             return redirect($responseUrl);
