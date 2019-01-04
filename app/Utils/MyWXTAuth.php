@@ -19,6 +19,7 @@ class MyWXTAuth
     const FLASH_WX_TAUTH_BACK_URL    = 'wx_tauth_back_url';
     const RESPONSE_FLAG              = 'wx_tauth_response';
     const RESPONSE_DATA              = 'data';
+    const RESPONSE_KEY               = 'key';
     const SESSION_WX_USER_INFO       = 'wx_user_info';
 
     const RSA_DATA_SEPARATOR = '_';
@@ -206,7 +207,11 @@ class MyWXTAuth
             return false;
         }
 
-        $oneTimeSecretAfterRSA = self::RSAEncrypt($oneTimeSecret);
+        if (env('WX_TAUTH_MODE', 'default') == 'simple') {
+            $oneTimeSecretAfterRSA = $oneTimeSecret;
+        } else {
+            $oneTimeSecretAfterRSA = self::RSAEncrypt($oneTimeSecret);
+        }
 
         if (!$oneTimeSecretAfterRSA) {
             return false;
@@ -226,8 +231,9 @@ class MyWXTAuth
     {
         $url = request('url', '');
         $bid = request('bid', '');
+        $key = request('key', '');
 
-        if (!$url || !$bid) {
+        if (!$url || !$bid || !$key) {
             return false;
         }
 
@@ -241,13 +247,8 @@ class MyWXTAuth
         Session::flash(self::FLASH_WX_TAUTH_BACK_URL, $url);
 
         if (env('WX_TAUTH_MODE', 'default') == 'simple') {
+            Session::flash(self::FLASH_WX_TAUTH_ONCE_SECRET, $key);
             return true;
-        }
-
-        $key = request('key', '');
-
-        if (!$key) {
-            return false;
         }
 
         $oneTimeSecret = self::RSAAuthServerDecrypt($bid, $key);
@@ -264,31 +265,30 @@ class MyWXTAuth
     public static function generateResponseUrl($data)
     {
         $backUrl = self::getBackUrl();
+        $oneTimeSecret = self::getOnceEncryptSecret();
 
-        if (!$backUrl) {
+        if (!$backUrl || !$oneTimeSecret) {
             return false;
         }
 
+        $backUrlParams = [
+            self::RESPONSE_FLAG => 1,
+        ];
+
         if (env('WX_TAUTH_MODE', 'default') == 'simple') {
             $responseData = json_encode($data);
+            $backUrlParams[self::RESPONSE_KEY] = $oneTimeSecret;
         } else {
-            $oneTimeSecret = self::getOnceEncryptSecret();
-
-            if (!$oneTimeSecret) {
-                return false;
-            }
-
             $responseData = self::encrypt($oneTimeSecret, json_encode($data));
         }
+
+        $backUrlParams[self::RESPONSE_DATA] = $responseData;
 
         if (!$responseData) {
             return false;
         }
 
-        $backUrl = $backUrl . '?' . http_build_query([
-                self::RESPONSE_FLAG => 1,
-                self::RESPONSE_DATA => $responseData,
-            ]);
+        $backUrl = $backUrl . '?' . http_build_query($backUrlParams);
 
         return $backUrl;
     }
