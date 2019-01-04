@@ -225,9 +225,8 @@ class MyWXTAuth
     {
         $url = request('url', '');
         $bid = request('bid', '');
-        $key = request('key', '');
 
-        if (!$url || !$bid || !$key) {
+        if (!$url || !$bid) {
             return false;
         }
 
@@ -238,6 +237,18 @@ class MyWXTAuth
             return false;
         }
 
+        Session::flash(self::FLASH_WX_TAUTH_BACK_URL, $url);
+
+        if (env('WX_TAUTH_MODE', 'default') == 'simple') {
+            return true;
+        }
+
+        $key = request('key', '');
+
+        if (!$key) {
+            return false;
+        }
+
         $oneTimeSecret = self::RSAAuthServerDecrypt($bid, $key);
 
         if (!$oneTimeSecret) {
@@ -245,7 +256,6 @@ class MyWXTAuth
         }
 
         Session::flash(self::FLASH_WX_TAUTH_ONCE_SECRET, $oneTimeSecret);
-        Session::flash(self::FLASH_WX_TAUTH_BACK_URL, $url);
 
         return true;
     }
@@ -253,13 +263,22 @@ class MyWXTAuth
     public static function generateResponseUrl($data)
     {
         $backUrl = self::getBackUrl();
-        $oneTimeSecret = self::getOnceEncryptSecret();
 
-        if (!$oneTimeSecret || !$backUrl) {
+        if (!$backUrl) {
             return false;
         }
 
-        $responseData = self::encrypt($oneTimeSecret, json_encode($data));
+        if (env('WX_TAUTH_MODE', 'default') == 'simple') {
+            $responseData = json_encode($data);
+        } else {
+            $oneTimeSecret = self::getOnceEncryptSecret();
+
+            if (!$oneTimeSecret) {
+                return false;
+            }
+
+            $responseData = self::encrypt($oneTimeSecret, json_encode($data));
+        }
 
         if (!$responseData) {
             return false;
