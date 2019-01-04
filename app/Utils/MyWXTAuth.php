@@ -191,7 +191,7 @@ class MyWXTAuth
         Session::forget(self::FLASH_WX_TAUTH_BACK_URL);
     }
 
-    public static function generateAuthUrl()
+    public static function generateAuthUrl($scope = 'snsapi_base')
     {
         $tauthUrl = env('WX_TAUTH_URL', '');
         $bid = env('WX_TAUTH_BID', '');
@@ -213,9 +213,10 @@ class MyWXTAuth
         }
 
         $tauthUrl = $tauthUrl . '?' . http_build_query([
-                'url' => URL::current(),
-                'bid' => $bid,
-                'key' => $oneTimeSecretAfterRSA,
+                'url'   => URL::current(),
+                'bid'   => $bid,
+                'key'   => $oneTimeSecretAfterRSA,
+                'scope' => $scope,
             ]);
 
         return $tauthUrl;
