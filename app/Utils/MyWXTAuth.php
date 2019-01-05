@@ -288,7 +288,8 @@ class MyWXTAuth
             return false;
         }
 
-        $backUrl = $backUrl . '?' . http_build_query($backUrlParams);
+        $backUrlParts = explode('?', $backUrl);
+        $backUrl = $backUrlParts[0] . '?' . http_build_query($backUrlParams);
 
         return $backUrl;
     }
