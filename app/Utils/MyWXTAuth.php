@@ -271,9 +271,9 @@ class MyWXTAuth
             return false;
         }
 
-        $backUrlParams = [
-            self::RESPONSE_FLAG => 1,
-        ];
+        $urlParsed = parse_url($backUrl);
+        parse_str($urlParsed['query'], $backUrlParams);
+        $backUrlParams[self::RESPONSE_FLAG] = 1;
 
         if (env('WX_TAUTH_MODE', 'default') == 'simple') {
             $responseData = json_encode($data);
