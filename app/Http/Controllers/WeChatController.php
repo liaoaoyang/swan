@@ -296,12 +296,12 @@ class WeChatController extends BaseController
     {
         if (MyWXTAuth::handleAuthRequest()) {
             $swanUser = session(Swan::SESSION_KEY_SWAN_USER);
-            $scope = request('scope', 'snsapi_base');
+            $scope = request('scope', env('SWAN_DEFAULT_WECHAT_OAUTH_SCOPE', MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_BASE));
 
             if (!$swanUser) {
                 $oauthObj = $this->weChatApp->oauth;
 
-                if (in_array($scope, ['snsapi_base', 'snsapi_userinfo'])) {
+                if (in_array($scope, [MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_BASE, MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_USERINFO])) {
                     $oauthObj->scopes([$scope]);
                 }
 

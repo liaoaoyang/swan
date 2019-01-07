@@ -26,6 +26,9 @@ class MyWXTAuth
     const RSA_1024           = 1024;
     const RSA_2048           = 2048;
 
+    const WECHAT_OAUTH_SCOPE_SNSAPI_BASE = 'snsapi_base';
+    const WECHAT_OAUTH_SCOPE_SNSAPI_USERINFO = 'snsapi_userinfo';
+
     public static function getWXTAuthServerPublicKey()
     {
         $publicKey = env('WX_TAUTH_SERVER_PUBLIC_KEY', '');
@@ -192,7 +195,7 @@ class MyWXTAuth
         Session::forget(self::FLASH_WX_TAUTH_BACK_URL);
     }
 
-    public static function generateAuthUrl($scope = 'snsapi_base')
+    public static function generateAuthUrl($scope = self::WECHAT_OAUTH_SCOPE_SNSAPI_BASE)
     {
         $tauthUrl = env('WX_TAUTH_URL', '');
         $bid = env('WX_TAUTH_BID', '');
