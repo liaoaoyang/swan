@@ -275,7 +275,12 @@ class MyWXTAuth
         }
 
         $urlParsed = parse_url($backUrl);
-        parse_str($urlParsed['query'], $backUrlParams);
+        $backUrlParams = [];
+
+        if (isset($urlParsed['query'])) {
+            parse_str($urlParsed['query'], $backUrlParams);
+        }
+
         $backUrlParams[self::RESPONSE_FLAG] = 1;
 
         if (env('WX_TAUTH_MODE', 'default') == 'simple') {

@@ -301,20 +301,23 @@ class WeChatController extends BaseController
             if (!$swanUser) {
                 $oauthObj = $this->weChatApp->oauth;
 
-                if (in_array($scope, [MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_BASE, MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_USERINFO])) {
-                    $oauthObj->scopes([$scope]);
+                if (!in_array($scope, [MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_BASE, MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_USERINFO])) {
+                    return view('swan/exception');
                 }
+
+                $oauthObj->scopes([$scope]);
 
                 return $oauthObj->redirect();
             }
 
             $swanUser = is_array($swanUser) ? $swanUser : json_decode($swanUser, true);
+
             $responseData = [
-                'id'   => $swanUser['id'],
+                'openid'   => $swanUser['id'],
             ];
 
-            if ($scope == 'snsapi_userinfo') {
-                $responseData['user'] = $swanUser;
+            if ($scope == MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_USERINFO && isset($swanUser['original'])) {
+                $responseData = $swanUser['original'];
             }
 
             $responseUrl = MyWXTAuth::generateResponseUrl($responseData);
