@@ -112,10 +112,17 @@ class WeChatController extends BaseController
 
         if (MyWXTAuth::getBackUrl() && MyWXTAuth::getOnceEncryptSecret()) {
             $swanUserArray = $swanUser->toArray();
-            $responseUrl = MyWXTAuth::generateResponseUrl([
-                'id' => $swanUserArray['id'],
-            ]);
-            Log::info('From WX oauth callback, WXTAuth response url: ' . $responseUrl);
+            $scope = session(MyWXTAuth::FLASH_WX_TAUTH_SCOPE);
+            $responseData = [
+                'openid'   => $swanUserArray['id'],
+            ];
+
+            if ($scope == MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_USERINFO && isset($swanUser['original'])) {
+                $responseData = $swanUserArray['original'];
+            }
+
+            $responseUrl = MyWXTAuth::generateResponseUrl($responseData);
+            Log::info('From WX oauth callback, WXTAuth response url: ' . $responseUrl . " scope : {$scope}");
 
             return redirect($responseUrl);
         }
@@ -296,7 +303,7 @@ class WeChatController extends BaseController
     {
         if (MyWXTAuth::handleAuthRequest()) {
             $swanUser = session(Swan::SESSION_KEY_SWAN_USER);
-            $scope = request('scope', env('SWAN_DEFAULT_WECHAT_OAUTH_SCOPE', MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_BASE));
+            $scope = session(MyWXTAuth::FLASH_WX_TAUTH_SCOPE);
 
             if (!$swanUser) {
                 $oauthObj = $this->weChatApp->oauth;

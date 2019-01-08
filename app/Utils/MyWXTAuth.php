@@ -18,15 +18,16 @@ class MyWXTAuth
     const FLASH_WX_TAUTH_ONCE_SECRET = 'wx_tauth_once_time_secret';
     const FLASH_WX_TAUTH_BACK_URL    = 'wx_tauth_back_url';
     const RESPONSE_FLAG              = 'wx_tauth_response';
-    const RESPONSE_DATA              = 'data';
+    const RESPONSE_DATA              = 'wx_tauth_data';
     const RESPONSE_KEY               = 'key';
     const SESSION_WX_USER_INFO       = 'wx_user_info';
+    const FLASH_WX_TAUTH_SCOPE       = 'wx_tauth_scope';
 
     const RSA_DATA_SEPARATOR = '_';
     const RSA_1024           = 1024;
     const RSA_2048           = 2048;
 
-    const WECHAT_OAUTH_SCOPE_SNSAPI_BASE = 'snsapi_base';
+    const WECHAT_OAUTH_SCOPE_SNSAPI_BASE     = 'snsapi_base';
     const WECHAT_OAUTH_SCOPE_SNSAPI_USERINFO = 'snsapi_userinfo';
 
     public static function getWXTAuthServerPublicKey()
@@ -193,6 +194,7 @@ class MyWXTAuth
     {
         Session::forget(self::FLASH_WX_TAUTH_ONCE_SECRET);
         Session::forget(self::FLASH_WX_TAUTH_BACK_URL);
+        Session::forget(self::FLASH_WX_TAUTH_SCOPE);
     }
 
     public static function generateAuthUrl($scope = self::WECHAT_OAUTH_SCOPE_SNSAPI_BASE)
@@ -235,6 +237,7 @@ class MyWXTAuth
         $url = request('url', '');
         $bid = request('bid', '');
         $key = request('key', '');
+        $scope = request('scope', env('SWAN_DEFAULT_WECHAT_OAUTH_SCOPE', MyWXTAuth::WECHAT_OAUTH_SCOPE_SNSAPI_BASE));
 
         if (!$url || !$bid || !$key) {
             return false;
@@ -248,6 +251,7 @@ class MyWXTAuth
         }
 
         Session::flash(self::FLASH_WX_TAUTH_BACK_URL, $url);
+        Session::flash(self::FLASH_WX_TAUTH_SCOPE, $scope);
 
         if (env('WX_TAUTH_MODE', 'default') == 'simple') {
             Session::flash(self::FLASH_WX_TAUTH_ONCE_SECRET, $key);
