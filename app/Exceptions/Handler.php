@@ -39,7 +39,10 @@ class Handler extends ExceptionHandler
         $file0 = isset($exceptionTrace[0]['file']) ? $exceptionTrace[0]['file'] : '';
 
         if (!config('app.debug')) {
-            Log::error('[' . $exception->getCode() . '] "' . $exception->getMessage() . '" on line ' . $line0 . ' of file ' . $file0);
+            Log::error('[' . $exception->getCode() . '] "' . $exception->getMessage() . '" on line ' .
+                (is_string($line0) ? $line0 : json_encode($line0)) .
+                ' of file ' . $file0
+            );
         } else {
             parent::report($exception);
         }
