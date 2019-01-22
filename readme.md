@@ -187,6 +187,13 @@ Users:
 
 Original username is `admin`, password is `SWAN_ADMIN_INIT_PASSWORD` in `.env`.
 
+## Multiple WeChat OAuth callback domains
+
+After OAuth login callback comes, we can get WeChat user information.
+
+In order to get user information in other domains, SWAN provided [MyWXTAuth](https://github.com/liaoaoyang/swan/blob/master/app/Utils/MyWXTAuth.php)(My WeiXin Third-party Authentication).
+
+
 ## TODO
 
 + Dashboard √
