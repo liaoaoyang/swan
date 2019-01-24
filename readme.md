@@ -193,6 +193,37 @@ After OAuth login callback comes, we can get WeChat user information.
 
 In order to get user information in other domains, SWAN provided [MyWXTAuth](https://github.com/liaoaoyang/swan/blob/master/app/Utils/MyWXTAuth.php)(My WeiXin Third-party Authentication).
 
+Sequence：
+
+```
+     ,----.          ,---.             ,----.                      ,------.
+     |User|          |T3P|             |SWAN|                      |WeChat|
+     `-+--'          `-+-'             `-+--'                      `--+---'
+       |               |                 |                            |    
+       | ------------->|                 |                            |    
+       |               |                 |                            |    
+       |               |bid/url/key/scope|                            |    
+       |               |----------------->                            |    
+       |               |                 |                            |    
+       |               |                 | OAuth callback url/code/...|    
+       |               |                 | --------------------------->    
+       |               |                 |                            |    
+       |               |                 |                            |    
+       | <-------------------------------------------------------------    
+       |               |                 |                            |    
+       |               |            confirm                           |    
+       | ------------------------------------------------------------->    
+       |               |                 |                            |    
+       |               |                 |      user information      |    
+       |               |                 | <---------------------------    
+       |               |                 |                            |    
+       |               |user information |                            |    
+       |               |<-----------------                            |    
+     ,-+--.          ,-+-.             ,-+--.                      ,--+---.
+     |User|          |T3P|             |SWAN|                      |WeChat|
+     `----'          `---'             `----'                      `------'
+
+```
 
 ## TODO
 
