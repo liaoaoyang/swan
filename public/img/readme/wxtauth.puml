@@ -1,0 +1,9 @@
+@startuml
+User -> T3P:
+T3P -> SWAN: bid/url/key/scope
+SWAN -> WeChat: OAuth callback url/code/...
+WeChat -> User:
+User -> WeChat: confirm
+WeChat -> SWAN: user information
+SWAN -> T3P: user information
+@enduml
