@@ -193,7 +193,7 @@ After OAuth login callback comes, we can get WeChat user information.
 
 In order to get user information in other domains, SWAN provided [MyWXTAuth](https://github.com/liaoaoyang/swan/blob/master/app/Utils/MyWXTAuth.php)(My WeiXin Third-party Authentication).
 
-Sequence：
+[Sequence](https://github.com/liaoaoyang/swan/blob/master/public/img/readme/wxtauth.puml)：
 
 ```
      ,----.          ,---.             ,----.                      ,------.
@@ -224,6 +224,7 @@ Sequence：
      `----'          `---'             `----'                      `------'
 
 ```
+
 
 ## TODO
 
