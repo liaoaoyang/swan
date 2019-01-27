@@ -225,6 +225,15 @@ In order to get user information in other domains, SWAN provided [MyWXTAuth](htt
 
 ```
 
+To use MyWXTAuth, there are `default` and `simple` modes, `default` mode use RSA to encrypt user data whereas `simple` mode just return it in plain text. Configuration in `.env` is `WX_TAUTH_MODE` and by default is `default`.
+
+`bid` is a very important parameter, which defined those domains can be redirected after WeChat OAuth callback.If your `bid` is `swanbid` and configuration in `.env` is `WX_TAUTH_CLIENT_SWANBID_AUTHENTIC_DOMAINS`(`bid` to uppercase), domains could be separate in commas.
+
+`key` should be random string in `simple` mode.
+
+`scope` will passed to WeChat and just accept `snsapi_base` and `snsapi_userinfo`.
+
+Response will be appended in callback url which t3p provided to SWAN, named `wx_tauth_data` and used `urlencode`.
 
 ## TODO
 
