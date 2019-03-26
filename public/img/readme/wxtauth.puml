@@ -1,4 +1,6 @@
 @startuml
+!include theme.azusa.color.puml
+
 User -> T3P:
 T3P -> SWAN: bid/url/key/scope
 SWAN -> WeChat: OAuth callback url/code/...
